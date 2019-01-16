@@ -20,6 +20,25 @@ public class Actor {
             method.accept(args);
         }
     }
+    
+    private final Runtime runtime;
+    private volatile int isActive;
+    protected final Queue<Message> mailBox;
+    
+    public Actor(Runtime runtime) {
+    		this.isActive = 0;
+    		this.runtime = runtime;
+    		this.mailBox = new ConcurrentLinkedQueue<>();
+    }
+    
+    public void setInactive() {
+    		this.isActive = 0;
+    }
+    
+    public void send(Consumer<Object[]> method, Object... args) {
+    		mailBox.add(new Message(method, args));
+    		
+    }
 }
 
     
